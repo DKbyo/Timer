@@ -1,4 +1,4 @@
-module.exports = function(app){
+module.exports = function(app,pg){
 
     app.get('/activity', function(req, res){
        	res.setHeader('Content-Type', 'application/json');
