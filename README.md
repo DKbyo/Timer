@@ -31,7 +31,7 @@ Before start nodejs server, please export the DATABASE_URL
 
 ```
 
-	postgres:///DATABASE_NAME
+export DATABASE_URL=postgres:///DATABASE_NAME
 
 ```
 
