@@ -9,8 +9,17 @@ app.factory('Auth', ['$resource',
       });
     }
 ]);
+app.factory('AuthNew', ['$resource',
+    function($resource) {
+      return $resource('/auth/signup', {}, {
+        create: {
+          method: 'POST'
+        }
+      });
+    }
+]);
 
-app.controller('loginCtrl', function PhoneListController($scope,Auth) {
+app.controller('loginCtrl', function PhoneListController($scope,Auth,AuthNew) {
   $scope.signin = function() {
     var l = Auth.login({
       login:$scope.login,
@@ -24,6 +33,21 @@ app.controller('loginCtrl', function PhoneListController($scope,Auth) {
          }else {
             alert(res.message);
          }
+    });
+  }
+  $scope.signup = function() {
+    AuthNew.create({
+      login:$scope.login,
+      password:$scope.password,
+      private:$scope.private
+    },function(res) {
+       if(res.response ==200){
+        localStorage.private = $scope.private;
+        localStorage.login = $scope.login
+        window.location.href="/index";
+      }else {
+        alert(res.message);
+      }
     });
   }
 });

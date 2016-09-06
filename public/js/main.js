@@ -106,7 +106,7 @@ app.controller('mainCtrl', function PhoneListController($scope,Activity,Auth) {
      $("#modalDelete").modal("hide");
   }
   $scope.save = function() {
-    if($scope.editing.idActivity!=undefined) {
+    if($scope.editing.idactivity!=undefined) {
         $scope.update();
     }else {
         $scope.add();
