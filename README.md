@@ -10,12 +10,12 @@ See the api docs in [Heroku](http://immense-reaches-20362.herokuapp.com/docs/)
 
 For test you can use:
 
-````
+```shell
 
 mocha -R spec test/testActivity.js 
 
 mocha -R spec test/testAuth.js 
 
-````
+```
 
 More soon...
