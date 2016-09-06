@@ -4,21 +4,196 @@
   <% include ../partials/header.ejs %>
 </head>
 
-<body>
+<body ng-controller="mainCtrl" ng-app="mainApp">
 
-  <% include ../partials/nav.ejs %>
-
-<div class="jumbotron text-center">
+<nav class="navbar navbar-default navbar-static-top navbar-inverse">
   <div class="container">
-    <a href="/" class="lang-logo">
-      <img src="/lang-logo.png">
-    </a>
-    <h1>Timer</h1>
-    <p>This is a sample Node application to store dialy activity.</p>
-   
+    <ul class="nav navbar-nav">
+      <li class="active">
+        <a href="/"><span class="glyphicon glyphicon-home"></span> Home</a>
+      </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-book"></span> Docs <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/docs/index.html#api-Auth">Auth</a></li>
+            <li><a href="/docs/index.html#api-Activity">Activity</a></li>
+          </ul>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li class="navbar-right dropdown" >
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"><span class="glyphicon glyphicon-user"></span> User <span class="caret">
+  
+        </span></a>
+         <ul class="dropdown-menu" role="menu">
+            <li><a ng-click="editUser()" >Edit</a></li>
+            <li><a ng-click="deleteUser()">Delete</a></li>
+            <li><a ng-click="logout()">Logout</a></li>
+            <li><a href="https://mx.linkedin.com/in/danyelcabello/en">LinkedIn</a></li>
+          </ul>
+      </li>
+    </ul>
   </div>
-</div>
+</nav>
 
 
+<button ng-click="showAdd()" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span>Create activity</button>
+<button ng-click="refresh()" class="btn btn-primary"><span class="glyphicon glyphicon-refresh"></span></button>
+
+<table class="table">
+	<thead>
+		<th>
+			ID Activity
+		</th>
+		<th>
+			Start
+		</th>
+
+		<th>
+			Length
+		</th>
+		<th>
+			Description
+		</th>
+		<th>
+			Created
+		</th>
+		<th>
+			Updated
+		</th>
+
+	</thead>
+	<tbody>
+		<tr ng-repeat="a in activities">
+			<td>
+				{{a.idactivity}}
+			</td>
+			<td>
+				{{a.start}}
+			</td>
+			<td>
+				{{a.length}}
+			</td>
+			<td>
+				{{a.description}}
+			</td>
+			<td>
+				{{a.created}}
+			</td>
+			<td>
+				{{a.updated}}
+			</td>
+			<td>
+				<button ng-click="delete(a.idactivity)"  class="btn btn-danger"><span class="glyphicon glyphicon-trash"/>
+				</button>
+				<button ng-click="edit(a)" class="btn btn-primary"><span class="glyphicon glyphicon-pencil"/></button>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<div id="modalUser" class="modal fade" tabindex="-1" role="dialog" data-show="true" data-backdrop="static">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">Editar</h4>
+	      </div>
+	      <div class="modal-body">
+	    	<form>
+			  <div class="form-group">
+			    <label for="password">Old Password</label>
+			    <input ng-model="user.password" type="password" class="form-control" id="password" placeholder="Password">
+			  </div>
+			  <div class="form-group">
+			    <label for="newpassword">New Password</label>
+			    <input ng-model="user.newpassword" type="password" class="form-control" id="newpassword" placeholder="Length">
+			  </div>
+			  <div class="form-group">
+			    <input ng-model="user.private" type="checkbox"> Private
+			  </div>
+			 </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button ng-click="updateUser()" type="button" class="btn btn-primary">Save</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+<div id="modal" class="modal fade" tabindex="-1" role="dialog" data-show="true" data-backdrop="static">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">Add or Edit</h4>
+	      </div>
+	      <div class="modal-body">
+	    	<form>
+			  <div class="form-group">
+			    <label for="exampleInputEmail1">Start</label>
+			    <input ng-model="editing.start" type="text" class="form-control" id="login" placeholder="Start">
+			  </div>
+			  <div class="form-group">
+			    <label for="length">Length</label>
+			    <input ng-model="editing.length" type="text" class="form-control" id="length" placeholder="Length">
+			  </div>
+			  <div class="form-group">
+			    <label for="description">Description</label>
+			    <input ng-model="editing.description" type="text" class="form-control" id="description" placeholder="Description">
+			  </div>
+			 </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button ng-click="save()" type="button" class="btn btn-primary">Save</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+<div id="modalDelete" class="modal fade" tabindex="-1" role="dialog" data-show="true" data-backdrop="static">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">Confirm</h4>
+	      </div>
+	      <div class="modal-body">
+	    		Do you really want to delete Activity #{{editing.idactivity}}?
+	      </div>
+	      <div class="modal-footer">
+	        <button ng-click="confirmDelete()" type="button" class="btn btn-danger">Delete</button>
+	         <button ng-click="cancelDelete()" type="button" class="btn btn-primary">Cancel</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+<div id="modalDeleteUser" class="modal fade" tabindex="-1" role="dialog" data-show="true" data-backdrop="static">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title">Confirm</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<form>
+	      	  <div class="form-group">
+			    <label for="description">Please enter your password to proceed.</label>
+	    		
+	    		<input class="form-control" ng-model="user.password" type="password"/>
+	    		</div>
+	    	</form>
+	      </div>
+	      <div class="modal-footer">
+	        <button ng-click="confirmDeleteUser()" type="button" class="btn btn-danger">Delete</button>
+	         <button ng-click="cancelDeleteUser()" type="button" class="btn btn-primary">Cancel</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-resource.js"></script>
+	<script src="/js/main.js"></script>
 </body>
 </html>

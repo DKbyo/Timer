@@ -1,4 +1,7 @@
 module.exports = function(app,pg){
+
+
+
 	 /** 
 	 * @api {post} /auth/login Login 
 	 * @apiName Login
@@ -14,7 +17,8 @@ module.exports = function(app,pg){
 	 *     HTTP/1.1 200 OK
 	 *     {
 	 *       "response": "200",
-	 *       "message": "OK"
+	 *       "message": "OK",
+	 *		 "private": true
 	 *     }
 	 *
 	 * @apiErrorExample {json} Error-Response:
@@ -29,8 +33,9 @@ module.exports = function(app,pg){
     	var data = req.body;
     	console.log("Login");
     	console.log(data);	
+    	//TODO: Hash MD5 password?
     	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-	    client.query('SELECT * FROM tuser where login = $1 and password= $2',
+	    client.query('SELECT private FROM tuser where login = $1 and password= $2',
 	    	[data.login,data.password], function(err, result) {
 		      done();
 		     
@@ -41,9 +46,13 @@ module.exports = function(app,pg){
 			    }));
 		      }
 		      else { 
-
+		      	  /*req.session.regenerate(function(){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+			        req.session.user = data.login;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+			        res.redirect('back');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+			      }); */         
 		      	res.send(JSON.stringify({ response: 200,
-			    		message:"OK"
+			    		message:"OK",
+			    		private:result.rows[0].private
 			   	}));
 		      }
 		    });
@@ -81,6 +90,7 @@ module.exports = function(app,pg){
     	var data = req.body;
     	console.log("Signup");
     	console.log(data);
+    	//Hash MD5 password?
     	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 	    client.query('INSERT INTO tuser (login,password,private,created,updated) values($1,$2,$3,$4,$5)',
 	    	[data.login,data.password,data.private,new Date(),new Date()], function(err, result) {
@@ -131,6 +141,7 @@ module.exports = function(app,pg){
     	var data = req.body;
     	console.log("Update auth");
     	console.log(data);
+    	//Hash MD5 password?
     	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 	    client.query('UPDATE tuser set password = $3,private = $4, updated = $5 where login = $1 and password= $2',
 	    	[data.login,data.password,data.newpassword,data.private,new Date()], function(err, result) {
@@ -179,6 +190,7 @@ module.exports = function(app,pg){
     	var data = req.body;
     	console.log("Delete auth");
     	console.log(data);
+    	//Hash MD5 Password?
     	pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 	    client.query('DELETE FROM tuser where login = $1 and password= $2',
 	    	[data.login,data.password], function(err, result) {

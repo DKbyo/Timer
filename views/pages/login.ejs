@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <% include ../partials/header.ejs %>
+</head>
+
+<body>
+	<div ng-app="loginApp" ng-controller="loginCtrl" class="modal show" tabindex="-1" role="dialog" data-show="true" data-backdrop="static">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title">Timer</h4>
+	      </div>
+	      <div class="modal-body">
+	    	<form>
+			  <div class="form-group">
+			    <label for="exampleInputEmail1">Login</label>
+			    <input ng-model="login" type="text" class="form-control" id="login" placeholder="Login">
+			  </div>
+			  <div class="form-group">
+			    <label for="exampleInputPassword1">Password</label>
+			    <input ng-model="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+			  </div>
+			 </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button ng-click="signin()" type="button" class="btn btn-primary">Login</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-resource.js"></script>
+	<script src="/js/login.js"></script>
+</body>
+</html>
